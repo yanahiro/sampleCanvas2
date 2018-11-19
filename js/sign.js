@@ -93,7 +93,6 @@ var ElectronicSignature  = (function(es) {
       // 内容を保存する
       if (saveflg) {
         moveflg = 0;
-        setLocalStoreage();
         // e.preventDefault();
         ctx.beginPath();
         saveflg = false;
@@ -197,7 +196,6 @@ var ElectronicSignature  = (function(es) {
       }
       console.log('endpoint2');      
       moveflg = 0;
-      setLocalStoreage();
       saveflg = false;
     });
 
@@ -212,29 +210,8 @@ var ElectronicSignature  = (function(es) {
       // border分の幅と高さを足す(2px)
       ctx.clearRect(0, 0, ctx.canvas.clientWidth + 2, ctx.canvas.clientHeight + 2);
     });
+
      
-    /**
-     * ストレージ保存処理
-     * 描画した内容をlocalStorageに保存する
-     * 
-     * @param  なし
-     * @return なし
-     */
-    var setLocalStoreage = (function() {
-        var png = canvas.toDataURL();
-        var logs = JSON.parse(myStorage.getItem("__log"));
-
-        setTimeout(function() {
-            // logs.unshift({png});
-            logs.unshift({ png: png });
-     
-            myStorage.setItem("__log", JSON.stringify(logs));
-
-            currentCanvas = 0;
-            temp = [];
-        }, 0);
-    });
-
     /**
      * 戻る処理
      * １つ前の描画内容に戻す
