@@ -69,7 +69,9 @@ var ElectronicSignature  = (function(es) {
       canvas.addEventListener("touchstart",function(e){
         e.preventDefault();
         var rect=e.target.getBoundingClientRect();
-        undoImage=ctx.getImageData(0,0,canvas.width,canvas.height);
+        // undoImage=ctx.getImageData(0,0,canvas.width,canvas.height);
+        undoImage.unshift(ctx.getImageData(0,0,canvas.width,canvas.height));
+        redoImage = [];
 
         for(var i=0;i<finger.length;i++){
           finger[i].x1=e.touches[i].clientX-rect.left;finger[i].y1=e.touches[i].clientY-rect.top;
