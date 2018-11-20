@@ -12,7 +12,7 @@
 // esは「ElectronicSignature」自身が引数となっている
 var ElectronicSignature  = (function(es) {
 
-  es.execute = function(canvas_id, btns) {
+  es.link = function(canvas_id, btns) {
 
     var c_id = canvas_id;
     var reset_id = btns.reset;
@@ -35,21 +35,16 @@ var ElectronicSignature  = (function(es) {
     var temp = [];
 
     //初期値（サイズ、色、アルファ値）の決定
-    var defSize = 1;
-    var defColor = "#333";
-
+    var defSize = 3;
+    var defColor = "#000";
 
     // Touch操作用
     // 直前と直後の座標位置を管理
     var finger = {x:0,y:0,x1:0,y1:0};
-    // for (var i=0; i < 10 ;i++) {
-    //   finger[i] = {x:0,y:0,x1:0,y1:0};
-    // }
 
-
-    this.init = function() {
-      init();
-    };
+    // this.init = function() {
+    //   init();
+    // };
 
     function init() {
       // オブジェクトを設定
@@ -68,48 +63,10 @@ var ElectronicSignature  = (function(es) {
       // canvas.addEventListener('touchmove', movePoint, false);
       // canvas.addEventListener('touchend', endPoint, false);
 
-      canvas.addEventListener("touchstart",function(e){
-        e.preventDefault();
-        var rect=e.target.getBoundingClientRect();
-        // undoImage=ctx.getImageData(0,0,canvas.width,canvas.height);
-        undoImage.unshift(ctx.getImageData(0,0,canvas.width,canvas.height));
-        redoImage = [];
-
-        // 開始時の座標位置を退避
-        finger.x1=e.touches[0].clientX-rect.left;
-        finger.y1=e.touches[0].clientY-rect.top;
-        // for(var i=0;i<finger.length;i++){
-        //   finger[i].x1=e.touches[i].clientX-rect.left;
-        //   finger[i].y1=e.touches[i].clientY-rect.top;
-        // }
-      });
-
-      canvas.addEventListener("touchmove",function(e){
-        e.preventDefault();
-        var rect=e.target.getBoundingClientRect();
-        finger.x=e.touches[0].clientX-rect.left;
-        finger.y=e.touches[0].clientY-rect.top;
-        ctx.beginPath();
-        ctx.moveTo(finger.x1,finger.y1);
-        ctx.lineTo(finger.x,finger.y);
-        ctx.lineCap="round";
-        ctx.stroke();
-
-        // 現在の座標位置を退避
-        finger.x1=finger.x;
-        finger.y1=finger.y;
-        // for(var i=0;i<finger.length;i++){
-        //   finger[i].x=e.touches[i].clientX-rect.left;
-        //   finger[i].y=e.touches[i].clientY-rect.top;
-        //   ctx.beginPath();
-        //   ctx.moveTo(finger[i].x1,finger[i].y1);
-        //   ctx.lineTo(finger[i].x,finger[i].y);
-        //   ctx.lineCap="round";
-        //   ctx.stroke();
-        //   finger[i].x1=finger[i].x;
-        //   finger[i].y1=finger[i].y;
-        // }
-      });
+      // タッチイベントを定義
+      // Androidのイベントのとり方によりタッチイベントの関数は分ける
+      canvas.addEventListener("touchstart", touchStartPoint, false);
+      canvas.addEventListener("touchmove", touchMovePoint, false);
 
       // 各種ボタンイベント定義
       var reset = document.getElementById(reset_id);
@@ -131,7 +88,7 @@ var ElectronicSignature  = (function(es) {
     var saveflg = false;
 
     /**
-     * マウスオーバーイベント
+     * 【PC用イベント】マウスオーバーイベント
      * （フォーカスイン）
      * canvas上にカーソルがある場合
      * 
@@ -155,7 +112,7 @@ var ElectronicSignature  = (function(es) {
     });
 
     /**
-     * マウスリーブイベント
+     * 【PC用イベント】マウスリーブイベント
      * （フォーカスアウト）
      * canvas上からカーソルが外れた場合
      * 
@@ -169,7 +126,7 @@ var ElectronicSignature  = (function(es) {
     });
 
     /**
-     * マウスダウンイベント（マウスボタンを押したとき）
+     * 【PC用イベント】マウスダウンイベント（マウスボタンを押したとき）
      * タッチスタートイベント
      * canvas上でマウスクリック、もしくはタッチした場合
      * 
@@ -193,7 +150,6 @@ var ElectronicSignature  = (function(es) {
 
     /**
      * マウスムーブイベント
-     * タッチムーブイベント
      * canvas上でマウスを移動、
      * もしくはタッチしたまま移動した場合
      * 
@@ -249,8 +205,46 @@ var ElectronicSignature  = (function(es) {
       saveflg = false;
     });
 
+    /**
+     * 【PC用イベント】タッチスタートイベント
+     * canvas上でタッチした場合
+     * 
+     * @param  なし
+     * @return なし
+     */
+    var touchStartPoint = (function(e) {
+      e.preventDefault();
+      var rect=e.target.getBoundingClientRect();
+      undoImage.unshift(ctx.getImageData(0,0,canvas.width,canvas.height));
+      redoImage = [];
 
-    var touch
+      // 開始時の座標位置を退避
+      finger.x1=e.touches[0].clientX-rect.left;
+      finger.y1=e.touches[0].clientY-rect.top;
+    });
+
+    /**
+     * タッチムーブイベント
+     * canvas上でタッチしたまま移動した場合
+     * 
+     * @param  なし
+     * @return なし
+     */
+    var touchMovePoint = (function(e) {
+      e.preventDefault();
+      var rect=e.target.getBoundingClientRect();
+      finger.x=e.touches[0].clientX-rect.left;
+      finger.y=e.touches[0].clientY-rect.top;
+      ctx.beginPath();
+      ctx.moveTo(finger.x1,finger.y1);
+      ctx.lineTo(finger.x,finger.y);
+      ctx.lineCap="round";
+      ctx.stroke();
+
+      // 現在の座標位置を退避
+      finger.x1=finger.x;
+      finger.y1=finger.y;
+    });
 
 
     /**
@@ -331,6 +325,9 @@ var ElectronicSignature  = (function(es) {
      
       document.getElementById("newImg").src = png;
     });
+
+    // 初期処理
+    init();
   }
 
   return es;
