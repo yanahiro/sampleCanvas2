@@ -86,6 +86,7 @@ var ElectronicSignature  = (function(es) {
 
       canvas.addEventListener("touchmove",function(e){
         e.preventDefault();
+        alert(e.touches[0].clientX);
         var rect=e.target.getBoundingClientRect();
         finger.x=e.touches[0].clientX-rect.left;
         finger.y=e.touches[0].clientY-rect.top;
