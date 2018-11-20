@@ -27,6 +27,7 @@ var setCanvasSize = (function() {
     var elem = document.getElementById("cs");
     elem.setAttribute('width', width);
     elem.setAttribute('height', height);
+    bWidth = width;
   }
 });
 
