@@ -36,13 +36,15 @@ var ElectronicSignature  = (function(es) {
 
     //初期値（サイズ、色、アルファ値）の決定
     var defSize = 1;
-    var defColor = "#555";
+    var defColor = "#333";
 
 
-    var finger=new Array;
-    for(var i=0;i<10;i++){
-      finger[i]={x:0,y:0,x1:0,y1:0,color:"rgb("+Math.floor(Math.random()*16)*15+","+Math.floor(Math.random()*16)*15+","+Math.floor(Math.random()*16)*15+")"};
-    }
+    // Touch操作用
+    // 直前と直後の座標位置を管理
+    var finger = [];
+    // for (var i=0; i < 10 ;i++) {
+    //   finger[i] = {x:0,y:0,x1:0,y1:0};
+    // }
 
 
     this.init = function() {
@@ -73,27 +75,41 @@ var ElectronicSignature  = (function(es) {
         undoImage.unshift(ctx.getImageData(0,0,canvas.width,canvas.height));
         redoImage = [];
 
-        for(var i=0;i<finger.length;i++){
-          finger[i].x1=e.touches[i].clientX-rect.left;finger[i].y1=e.touches[i].clientY-rect.top;
-        }
+        // 開始時の座標位置を退避
+        finger.x1=e.touches[0].clientX-rect.left;
+        finger.y1=e.touches[0].clientY-rect.top;
+        // for(var i=0;i<finger.length;i++){
+        //   finger[i].x1=e.touches[i].clientX-rect.left;
+        //   finger[i].y1=e.touches[i].clientY-rect.top;
+        // }
       });
 
       canvas.addEventListener("touchmove",function(e){
         e.preventDefault();
         var rect=e.target.getBoundingClientRect();
-        for(var i=0;i<finger.length;i++){
-          finger[i].x=e.touches[i].clientX-rect.left;
-          finger[i].y=e.touches[i].clientY-rect.top;
-          ctx.beginPath();
-          ctx.moveTo(finger[i].x1,finger[i].y1);
-          ctx.lineTo(finger[i].x,finger[i].y);
-          ctx.lineCap="round";
-          ctx.stroke();
-          finger[i].x1=finger[i].x;
-          finger[i].y1=finger[i].y;
-        }
-      });
+        finger.x=e.touches[0].clientX-rect.left;
+        finger.y=e.touches[0].clientY-rect.top;
+        ctx.beginPath();
+        ctx.moveTo(finger[i].x1,finger[i].y1);
+        ctx.lineTo(finger[i].x,finger[i].y);
+        ctx.lineCap="round";
+        ctx.stroke();
 
+        // 現在の座標位置を退避
+        finger.x1=finger.x;
+        finger.y1=finger.y;
+        // for(var i=0;i<finger.length;i++){
+        //   finger[i].x=e.touches[i].clientX-rect.left;
+        //   finger[i].y=e.touches[i].clientY-rect.top;
+        //   ctx.beginPath();
+        //   ctx.moveTo(finger[i].x1,finger[i].y1);
+        //   ctx.lineTo(finger[i].x,finger[i].y);
+        //   ctx.lineCap="round";
+        //   ctx.stroke();
+        //   finger[i].x1=finger[i].x;
+        //   finger[i].y1=finger[i].y;
+        // }
+      });
 
       // 各種ボタンイベント定義
       var reset = document.getElementById(reset_id);
@@ -209,6 +225,21 @@ var ElectronicSignature  = (function(es) {
 
         saveflg = true;
       }
+
+
+      e.preventDefault();
+      var rect=e.target.getBoundingClientRect();
+      for(var i=0;i<finger.length;i++){
+        finger[i].x=e.touches[i].clientX-rect.left;
+        finger[i].y=e.touches[i].clientY-rect.top;
+        ctx.beginPath();
+        ctx.moveTo(finger[i].x1,finger[i].y1);
+        ctx.lineTo(finger[i].x,finger[i].y);
+        ctx.lineCap="round";
+        ctx.stroke();
+        finger[i].x1=finger[i].x;
+        finger[i].y1=finger[i].y;
+      }
     });
 
     /**
@@ -227,13 +258,15 @@ var ElectronicSignature  = (function(es) {
          ctx.lineWidth = defSize * 2;
          ctx.strokeStyle = defColor;
          ctx.stroke();
-         console.log('endpoint1');      
          saveflg = true;
       }
-      console.log('endpoint2');      
       moveflg = 0;
       saveflg = false;
     });
+
+
+    var touch
+
 
     /**
      * リセット処理
