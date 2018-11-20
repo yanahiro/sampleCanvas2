@@ -23,11 +23,11 @@ var setCanvasSize = (function() {
   console.log('height : ' + height);
 
   // 幅(Width)が変わった場合はリサイズする
-  // if (bWidth == 0 || bWidth <> width) {
+  if (bWidth == 0 || bWidth <> width) {
     var elem = document.getElementById("cs");
     elem.setAttribute('width', width);
     elem.setAttribute('height', height);
-  // }
+  }
 });
 
 // ロードイベント処理
