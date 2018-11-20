@@ -175,7 +175,7 @@ var ElectronicSignature  = (function(es) {
          
         ctx.lineTo(Xpoint, Ypoint);
         ctx.lineCap = "round";
-        ctx.lineWidth = defSize * 2;
+        ctx.lineWidth = defSize;
         ctx.strokeStyle = defColor;
         ctx.stroke();     
 
@@ -194,12 +194,12 @@ var ElectronicSignature  = (function(es) {
      */
     var endPoint = (function(e) { 
       if (moveflg === 0) {
-         ctx.lineTo(Xpoint-1, Ypoint-1);
-         ctx.lineCap = "round";
-         ctx.lineWidth = defSize * 2;
-         ctx.strokeStyle = defColor;
-         ctx.stroke();
-         saveflg = true;
+        ctx.lineTo(Xpoint-1, Ypoint-1);
+        ctx.lineCap = "round";
+        ctx.lineWidth = defSize;
+        ctx.strokeStyle = defColor;
+        ctx.stroke();
+        saveflg = true;
       }
       moveflg = 0;
       saveflg = false;
@@ -239,6 +239,8 @@ var ElectronicSignature  = (function(es) {
       ctx.moveTo(finger.x1,finger.y1);
       ctx.lineTo(finger.x,finger.y);
       ctx.lineCap="round";
+      ctx.lineWidth = defSize;
+      ctx.strokeStyle = defColor;
       ctx.stroke();
 
       // 現在の座標位置を退避
