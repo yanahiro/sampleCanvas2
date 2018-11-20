@@ -13,16 +13,21 @@ var getStyleSheetValue = (function(elem, prop) {
   return value;
 });
 
+var bWidth = 0;
 var setCanvasSize = (function() {
   var csObj = document.querySelector('#cs');
   var width = getStyleSheetValue(csObj, 'width');
   var height = getStyleSheetValue(csObj, 'height');
+
   console.log('width : ' + width);
   console.log('height : ' + height);
 
-  var elem = document.getElementById("cs");
-  elem.setAttribute('width', width);
-  elem.setAttribute('height', height);
+  // 幅(Width)が変わった場合はリサイズする
+  if (bWidth <> width) {
+    var elem = document.getElementById("cs");
+    elem.setAttribute('width', width);
+    elem.setAttribute('height', height);
+  }
 });
 
 // ロードイベント処理
