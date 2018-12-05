@@ -33,10 +33,10 @@ var setCanvasSize = (function() {
 
 // ロードイベント処理
 window.addEventListener('load', function() {
-  // setCanvasSize();
+  setCanvasSize();
 })
 
 // ウィンドウサイズが変わった場合
 window.addEventListener("resize", function() {
-  setCanvasSize();
+  // setCanvasSize();
 });
