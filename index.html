@@ -29,6 +29,20 @@
       .scroll {
         overflow-x: auto;
       }
+      .scroll::-webkit-scrollbar{ /* スクロールバー全体 */
+          width: 15px;
+      }
+      .scroll::-webkit-scrollbar-thumb{ /* スクロールバーのある部分 */
+          background: #777;
+          border-radius: 10px;
+      }
+      .scroll::-webkit-scrollbar-track-piece:start{ /* スクロールバーが表示されてない部分（前） */
+          background: #eee;
+      }
+      .scroll::-webkit-scrollbar-track-piece:end{ /* スクロールバーが表示されてない部分（後ろ） */
+          background: #eee;
+      }
+
       .hero-body {
         padding: 1.5rem .4rem;
       }
@@ -40,6 +54,9 @@
       }
       .mt-3 {
         margin-top: -3rem;
+      }
+      .mb2 {
+        margin-bottom: 2rem;
       }
     </style>
   </head>
@@ -53,8 +70,8 @@
         <a href="./index2.html" class="button is-white is-pulled-right mt-3">タブレット</a>
       </div>
     </header>
-    <section class="section scroll">
-      <div class="container">
+    <section class="section">
+      <div class="container scroll mb2">
         <canvas id="cs"></canvas>
       </div>
       <div class="container">
